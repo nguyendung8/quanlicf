@@ -154,7 +154,7 @@ $conn->close();
                                         </td>
                                         <?php if ($role == "Admin") : ?>
                                             <td>
-                                                <a class="btn btn-primary" onclick="confirm_delete(<?php echo $item['EmployeeID']; ?>, 'Employee')">Xóa</a>
+                                                <a class="btn btn-primary deleteButton" href="deleteemployee.php?id=<?php echo $item['EmployeeID']?> ">Xóa</a>
                                                 <a class="btn btn-success" onclick="sua(<?php echo $item['EmployeeID']; ?>)">Sửa</a>
 
                                                 <!-- Modal -->

@@ -226,7 +226,7 @@ $conn->close();
                                             <label style="width: auto"><?php echo $order['OrderDate']; ?></label>
                                         </td>
                                         <td>
-                                            <a class="btn btn-primary" onclick="confirm_delete(<?php echo $order['OrderID']; ?>, 'Order')">Xóa</a>
+                                            <a class="btn btn-primary" href="deleteorder.php?id=<?php echo $order['OrderID']; ?> ">Xóa</a>
                                             <a class="btn btn-success" onclick="sua(<?php echo $order['OrderID']; ?>)">Sửa</a>
                                             <a class="btn btn-warning" onclick="chiTiet(<?php echo $order['OrderID']; ?>)">Chi tiết</a>
 

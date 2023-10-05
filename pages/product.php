@@ -134,7 +134,7 @@ $conn->close();
                                         </td>
                                         <?php if ($role == "Admin"): ?>
                                             <td>
-                                                <a class="btn btn-primary" onclick="confirm_delete(<?php echo $item['ProductID']; ?>, 'Product')">Xóa</a>
+                                                <a class="btn btn-primary" href="deleteproduct.php?id=<?php echo $item['ProductID']; ?> ">Xóa</a>
                                                 <a class="btn btn-success" onclick="sua(<?php echo $item['ProductID']; ?>)">Sửa</a>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="update<?php echo $item['ProductID']; ?>" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">

@@ -13,7 +13,5 @@ if ($conn->connect_error) {
     die("Kết nối đến CSDL thất bại: " . $conn->connect_error);
 }
 
-// Đặt mã ký tự kết nối thành UTF-8 (tuỳ chọn)
-$conn->set_charset("utf8");
 
 ?>
