@@ -1,0 +1,40 @@
+html,
+body,
+header,
+.view {
+    height: 100%;
+}
+
+@media (min-width: 560px) and (max-width: 740px) {
+    html,
+    body,
+    header,
+    .view {
+        height: 650px;
+    }
+}
+
+@media (min-width: 800px) and (max-width: 850px) {
+    html,
+    body,
+    header,
+    .view {
+        height: 650px;
+    }
+}
+#txtInput {
+    width: 150px;
+    height: calc(1.5em + .75rem + 2px);
+}
+#mainCaptcha {
+    width: 163px;
+    height: calc(1.5em + .75rem + 2px);
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 5px;
+    text-decoration: line-through;
+    color: white;
+    background-color: #4d5c6d;
+}
