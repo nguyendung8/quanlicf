@@ -15,6 +15,27 @@ ob_start();
 
 $role = $_SESSION["role"] ?? '';
 
+// Xử lý phân trang ajax
+$num_per_page = 03;
+
+if(isset($_GET["page"])) {
+    $page = $_GET["page"];
+} else {
+    $page = 1;
+}
+
+$start_from = ($page - 1) * 03;
+
+$sqlOder = "SELECT employees.LastName AS EmployeeLastName, customers.LastName AS CustomerLastName, 
+            employees.FirstName AS EmployeeFirstName, customers.FirstName AS CustomerFirstName, 
+            employees.EmployeeID,
+            customers.CustomerID,
+            orders.* FROM orders
+              INNER JOIN customers ON customers.CustomerID = orders.CustomerID
+              INNER JOIN employees ON employees.EmployeeID = orders.EmployeeID
+              LIMIT $start_from,$num_per_page";
+$resultOrder = $conn->query($sqlOder);
+
 // Hàm xử lý thông báo
 function setFlashMessage($message, $success)
 {
@@ -23,15 +44,6 @@ function setFlashMessage($message, $success)
     header("Refresh:0");
     exit();
 }
-
-$sqlOder = "SELECT employees.LastName AS EmployeeLastName, customers.LastName AS CustomerLastName, 
-            employees.FirstName AS EmployeeFirstName, customers.FirstName AS CustomerFirstName, 
-            employees.EmployeeID,
-            customers.CustomerID,
-            orders.* FROM orders
-              INNER JOIN customers ON customers.CustomerID = orders.CustomerID
-              INNER JOIN employees ON employees.EmployeeID = orders.EmployeeID";
-$resultOrder = $conn->query($sqlOder);
 
 $sqlEmployees = "SELECT * FROM employees";
 $resultEmployees = $conn->query($sqlEmployees);
@@ -80,6 +92,26 @@ function updateTotalPrice($selectedProductID, $selectedQuantity, $products)
     return 0;
 }
 
+//create order 
+function addOrder($conn) {
+    if (isset($_POST['addOrder'])) {
+        $customer_id = $_POST['customerId'];
+        $employee_id = $_POST['employeeId'];
+
+        $sql = "INSERT INTO `orders` (`CustomerID`, `EMployeeID`, `UnitPrice`) 
+        VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sss", $customer_id, $employee_id);
+
+        if ($stmt->execute()) {
+            setFlashMessage("Thêm mới đơn hàng thành công", true);
+        } else {
+            setFlashMessage("Thêm mới đơn hàng không thành công", false);
+        }
+        $stmt->close();
+    }
+}
+
 //update order
 function updateOrder($conn)
 {
@@ -102,9 +134,10 @@ function updateOrder($conn)
     }
 }
 updateOrder($conn);
+addOrder($conn);
 
 // Đóng kết nối cơ sở dữ liệu
-$conn->close();
+// $conn->close();
 ?>
 <script>
     function addOrderDetailRow(id) {
@@ -207,7 +240,7 @@ $conn->close();
                         <div class="table-responsive card mt-2">
                             <table class="table table-hover">
                                 <tr>
-                                    <th>#</th>
+                                    <th>ID</th>
                                     <th>Tên khách hàng</th>
                                     <th>Tên nhân viên tạo đơn hàng</th>
                                     <th>Ngày tạo hóa đơn</th>
@@ -215,7 +248,9 @@ $conn->close();
                                 </tr>
                                 <?php foreach ($orders as $order) : ?>
                                     <tr>
-                                        <td><?php echo $stt++; ?></td>
+                                        <td>
+                                        <label style="width: auto"><?php echo $order['OrderID']?></label>
+                                        </td>
                                         <td>
                                             <label style="width: auto"><?php echo $order['CustomerFirstName'] . ' ' . $order['CustomerLastName']; ?></label>
                                         </td>
@@ -273,6 +308,20 @@ $conn->close();
                                     </tr>
                                 <?php endforeach; ?>
                             </table>
+                             <!-- Pagination -->
+                             <?php
+                                $sql = "SELECT * FROM orders";
+                                $rs_result = $conn->query($sql);
+                                $total_records = $rs_result->num_rows;
+                                $total_pages = ceil($total_records/$num_per_page);
+
+                                echo("<div class='pagination'>");
+                                for($i =1;$i <=$total_pages;$i++) {
+                                    echo("<a href='order.php?page=".$i."'>".$i."</a>");
+                                }
+                                echo("</div>");
+                                $conn->close();
+                            ?>
                         </div>
                     <?php else : ?>
                         <p class="alert alert-danger">Danh sách đơn hàng trống</p>
@@ -282,16 +331,19 @@ $conn->close();
         </div>
     </div>
 </div>
+
+<!-- Modal thêm mới đơn hàng -->
 <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+        <form method="post">
             <div class="modal-header">
                 <h5 class="modal-title" id="orderModalLabel">Thêm mới đơn hàng</h5>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label>Tên khách hàng</label>
-                    <select class="form-control" id="customerID" required>
+                    <select name="customerId" class="form-control" id="customerID" required>
                         <?php foreach ($customers as $item1) : ?>
                             <option value="<?php echo $item1['CustomerID']; ?>"><?php echo $item1['FirstName'] . ' ' . $item1['LastName']; ?></option>
                         <?php endforeach; ?>
@@ -299,7 +351,7 @@ $conn->close();
                 </div>
                 <div class="form-group">
                     <label>Tên nhân viên</label>
-                    <select class="form-control" id="employeeID" required>
+                    <select name="employeeId" class="form-control" id="employeeID" required>
                         <?php foreach ($employees as $item1) : ?>
                             <option value="<?php echo $item1['EmployeeID']; ?>"><?php echo $item1['FirstName'] . ' ' . $item1['LastName']; ?></option>
                         <?php endforeach; ?>
@@ -320,8 +372,9 @@ $conn->close();
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="closeAdd()" class="btn btn-secondary">Đóng</button>
-                <button type="button" class="btn btn-success" id="btnAddOrder">Thêm</button>
+                <button name="addOrder" type="submit" class="btn btn-success" id="btnAddOrder">Thêm</button>
             </div>
+        </form>
         </div>
     </div>
 </div>
@@ -352,3 +405,30 @@ $conn->close();
 $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
+<style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 50px;
+        width: 100%;
+        /* border: 1px solid #168fff; */
+        border-radius: 10px;
+    }
+    .pagination a {
+        color: #fff;
+        border: none;
+        width: 29px;
+        height: 29px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #168fff;
+        border-radius: 6px;
+    }
+    .pagination a:hover {
+        opacity: 0.7;
+    }
+</style>

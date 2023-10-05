@@ -15,6 +15,19 @@ ob_start();
 
 $role = $_SESSION["role"] ?? '';
 
+// Xử lý phân trang ajax
+$num_per_page = 03;
+
+if(isset($_GET["page"])) {
+    $page = $_GET["page"];
+} else {
+    $page = 1;
+}
+
+$start_from = ($page - 1) * 03;
+
+$sql = "SELECT * FROM customers LIMIT $start_from,$num_per_page";
+$result = $conn->query($sql);
 // Hàm xử lý thông báo
 function setFlashMessage($message, $success)
 {
@@ -77,10 +90,6 @@ if ($role == "Admin") {
     updateCustomer($conn);
 }
 
-// Truy vấn dữ liệu từ bảng "customers"
-$sql = "SELECT * FROM customers";
-$result = $conn->query($sql);
-
 // Kiểm tra và gán dữ liệu vào biến $model
 $model = [];
 if ($result->num_rows > 0) {
@@ -90,7 +99,7 @@ if ($result->num_rows > 0) {
 }
 
 // Đóng kết nối cơ sở dữ liệu
-$conn->close();
+// $conn->close();
 ?>
 
 <div class="container-xxl">
@@ -114,7 +123,7 @@ $conn->close();
                         <div class="table-responsive card mt-2">
                             <table class="table table-hover">
                                 <tr>
-                                    <th>#</th>
+                                    <th>ID</th>
                                     <th>Tên khách hàng</th>
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
@@ -124,7 +133,9 @@ $conn->close();
                                 </tr>
                                 <?php foreach ($model as $item) : ?>
                                     <tr>
-                                        <td><?php echo $stt++; ?></td>
+                                        <td>
+                                        <label style="width: auto"><?php echo $item['CustomerID']?></label>
+                                        </td>
                                         <td>
                                             <label style="width: auto"><?php echo $item['FirstName'] . ' ' . $item['LastName']; ?></label>
                                         </td>
@@ -178,6 +189,20 @@ $conn->close();
                                     </tr>
                                 <?php endforeach; ?>
                             </table>
+                               <!-- Pagination -->
+                               <?php
+                                $sql = "SELECT * FROM customers";
+                                $rs_result = $conn->query($sql);
+                                $total_records = $rs_result->num_rows;
+                                $total_pages = ceil($total_records/$num_per_page);
+
+                                echo("<div class='pagination'>");
+                                for($i =1;$i <=$total_pages;$i++) {
+                                    echo("<a href='customer.php?page=".$i."'>".$i."</a>");
+                                }
+                                echo("</div>");
+                                $conn->close();
+                            ?>
                         </div>
                     <?php else : ?>
                         <p class="alert alert-danger">Danh sách khách hàng trống</p>
@@ -230,3 +255,30 @@ $conn->close();
 $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
+<style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 50px;
+        width: 100%;
+        /* border: 1px solid #168fff; */
+        border-radius: 10px;
+    }
+    .pagination a {
+        color: #fff;
+        border: none;
+        width: 29px;
+        height: 29px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #168fff;
+        border-radius: 6px;
+    }
+    .pagination a:hover {
+        opacity: 0.7;
+    }
+</style>

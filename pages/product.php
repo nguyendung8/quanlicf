@@ -15,6 +15,21 @@ ob_start();
 
 $role = $_SESSION["role"] ?? '';
 
+// Xử lý phân trang ajax
+$num_per_page = 03;
+
+if(isset($_GET["page"])) {
+    $page = $_GET["page"];
+} else {
+    $page = 1;
+}
+
+$start_from = ($page - 1) * 03;
+
+$sql = "SELECT * FROM products LIMIT $start_from,$num_per_page";
+$result = $conn->query($sql);
+
+
 // Hàm xử lý thông báo
 function setFlashMessage($message, $success) {
     $_SESSION['Message'] = $message;
@@ -23,17 +38,25 @@ function setFlashMessage($message, $success) {
     exit();
 }
 
+
+
 // Hàm thêm mới sản phẩm
 function addProduct($conn) {
     if (isset($_POST['addProduct'])) {
         $product_productname = $_POST['ProductName'];
         $product_description = $_POST['Description'];
         $product_unitprice = $_POST['UnitPrice'];
+        $product_image = basename($_FILES['ProductImage']['name']);
 
-        $sql = "INSERT INTO `products` (`ProductName`, `Description`, `UnitPrice`) 
-        VALUES (?, ?, ?)";
+        // Lưu ảnh vào folder uploads
+        $uploadDir = '../uploads/';
+        $imageUrl = $uploadDir . $product_image;
+        move_uploaded_file($_FILES['ProductImage']['tmp_name'], $imageUrl);
+
+        $sql = "INSERT INTO `products` (`ProductName`, `Description`, `UnitPrice`, `image_url`) 
+        VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $product_productname, $product_description, $product_unitprice);
+        $stmt->bind_param("ssss", $product_productname, $product_description, $product_unitprice, $product_image);
 
         if ($stmt->execute()) {
             setFlashMessage("Thêm mới sản phẩm thành công", true);
@@ -73,9 +96,6 @@ if ($role == "Admin") {
     updateProduct($conn);
 }
 
-$sql = "SELECT * FROM products";
-$result = $conn->query($sql);
-
 // Kiểm tra và gán dữ liệu vào biến $model
 $model = [];
 if ($result->num_rows > 0) {
@@ -84,7 +104,7 @@ if ($result->num_rows > 0) {
     }
 }
 // Đóng kết nối cơ sở dữ liệu
-$conn->close();
+// $conn->close();
 ?>
 
 <div class="container-xxl">
@@ -112,8 +132,9 @@ $conn->close();
                         <div class="table-responsive card mt-2">
                             <table class="table table-hover">
                                 <tr>
-                                    <th>#</th>
+                                    <th>ID</th>
                                     <th>Tên sản phẩm</th>
+                                    <th>Ảnh sản phẩm</th>
                                     <th>Mô tả</th>
                                     <th>Giá bán</th>
                                     <?php if ($role == "Admin"): ?>
@@ -122,9 +143,16 @@ $conn->close();
                                 </tr>
                                 <?php foreach ($model as $item): ?>
                                     <tr>
-                                        <td><?php echo $stt++; ?></td>
+                                        <td>
+                                            <label style="width: auto"><?php echo $item['ProductID']?></label>
+                                        </td>
                                         <td>
                                             <label style="width: auto"><?php echo $item['ProductName']; ?></label>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <img style="width: 100px; height: 100px;" src="../uploads/<?php echo $item['image_url']; ?>" alt="">
+                                            </div>
                                         </td>
                                         <td>
                                             <label style="width: auto"><?php echo $item['Description']; ?></label>
@@ -172,6 +200,20 @@ $conn->close();
                                     </tr>
                                 <?php endforeach; ?>
                             </table>
+                                <!-- Pagination -->
+                            <?php
+                                $sql = "SELECT * FROM products";
+                                $rs_result = $conn->query($sql);
+                                $total_records = $rs_result->num_rows;
+                                $total_pages = ceil($total_records/$num_per_page);
+
+                                echo("<div class='pagination'>");
+                                for($i =1;$i <=$total_pages;$i++) {
+                                    echo("<a href='product.php?page=".$i."'>".$i."</a>");
+                                }
+                                echo("</div>");
+                                $conn->close();
+                            ?>
                         </div>
                     <?php else: ?>
                         <p class="alert alert-danger">Danh sách sản phẩm trống</p>
@@ -187,7 +229,7 @@ $conn->close();
     <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title" id="productModalLabel">Thêm mới sản phẩm</h5>
                     </div>
@@ -195,6 +237,10 @@ $conn->close();
                         <div class="form-group">
                             <label>Tên sản phẩm</label>
                             <input class="form-control" name="ProductName" placeholder="Nhập tên sản phẩm" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Ảnh sản phẩm</label>
+                            <input type="file" class="form-control" name="ProductImage" required />
                         </div>
                         <div class="form-group">
                             <label>Mô tả</label>
@@ -218,3 +264,30 @@ $conn->close();
 $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
+<style>
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 50px;
+        width: 100%;
+        /* border: 1px solid #168fff; */
+        border-radius: 10px;
+    }
+    .pagination a {
+        color: #fff;
+        border: none;
+        width: 29px;
+        height: 29px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #168fff;
+        border-radius: 6px;
+    }
+    .pagination a:hover {
+        opacity: 0.7;
+    }
+</style>
