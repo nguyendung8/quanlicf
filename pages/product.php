@@ -154,7 +154,7 @@ if ($result->num_rows > 0) {
                                             <label style="width: auto"><?php echo $item['Description']; ?></label>
                                         </td>
                                         <td>
-                                            <label style="width: auto"><?php echo number_format($item['UnitPrice'], 0, ',', '.') . ' đồng'; ?></label>
+                                            <label style="width: auto"><?php echo number_format($item['UnitPrice'], 0,',','.') . ' đồng'; ?></label>
                                         </td>
                                         <?php if ($role == "Admin"): ?>
                                             <td>

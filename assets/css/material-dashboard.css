@@ -2743,7 +2743,7 @@ progress {
 .form-control {
   display: block;
   width: 100%;
-  padding: 0.5rem 0;
+  padding: 0.5rem 9px;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5rem;
@@ -2793,7 +2793,7 @@ progress {
 }
 
 .form-control::file-selector-button {
-  padding: 0.5rem 0;
+  padding: 0.5rem 9px;
   margin: -0.5rem 0;
   margin-inline-end: 0;
   color: #495057;
@@ -2820,7 +2820,7 @@ progress {
 .form-control-plaintext {
   display: block;
   width: 100%;
-  padding: 0.5rem 0;
+  padding: 0.5rem 9px;
   margin-bottom: 0;
   line-height: 1.5rem;
   color: #344767;
@@ -3330,7 +3330,7 @@ textarea.form-control-lg {
 .input-group-text {
   display: flex;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.5rem 9px;
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5rem;

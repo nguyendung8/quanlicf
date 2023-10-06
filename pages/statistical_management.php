@@ -81,7 +81,7 @@ $conn->close();
                         <td><?= $item['FirstName'] . ' ' . $item['LastName'] ?></td>
                         <td><?= $item['NumberOfPurchases'] ?></td>
                         <!-- <td><?= isset($item['TotalSpending']) ? $item['TotalSpending'] : 'N/A' ?></td>
-                        <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0, ',', '.') . ' đồng' : 'N/A' ?></td> -->
+                        <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0,',','.') . ' đồng' : 'N/A' ?></td> -->
 
                     </tr>
                 <?php endforeach; ?>
@@ -107,7 +107,7 @@ $conn->close();
                         <td><?= $item['ProductID'] ?></td>
                         <td><?= $item['ProductName'] ?></td>
                         <td><?= isset($item['TotalQuantitySold']) ? $item['TotalQuantitySold'] : '2' ?></td>
-                        <!-- <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0, ',', '.') . ' đồng' : 'N/A' . ' đồng' ?></td> -->
+                        <!-- <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0,',','.') . ' đồng' : 'N/A' . ' đồng' ?></td> -->
                     </tr>
                 <?php endforeach; ?>
             </tbody>

@@ -141,7 +141,7 @@ $conn->close();
                                             <label style="width: auto"><?php echo $item['TotalOrders']; ?></label>
                                         </td>
                                         <td>
-                                            <label style="width: auto"><?php echo number_format($item['TotalRevenue'], 0, ',', '.') . ' đồng'; ?></label>
+                                            <label style="width: auto"><?php echo number_format($item['TotalRevenue'], 0,',','.') . ' đồng'; ?></label>
                                         </td>
                                         <td>
                                             <label style="width: auto"><?php echo $item['TotalCustomers']; ?></label>

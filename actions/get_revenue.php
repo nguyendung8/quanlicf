@@ -15,7 +15,7 @@ if ($data) {
         if ($result) {
             $row = $result->fetch_assoc();
             $revenue = isset($row['revenue']) ? $row['revenue'] : 0;
-            $formattedData = number_format($revenue, 0, ',', '.') . ' đồng';
+            $formattedData = number_format($revenue, 0,',','.') . ' đồng';
             // Hiển thị số tiền đã định dạng
             echo 'Doanh thu: ' . $formattedData;
         } else {
@@ -35,7 +35,7 @@ if ($data) {
         if ($result) {
             $row = $result->fetch_assoc();
             $revenue = isset($row['revenue']) ? $row['revenue'] : 0;
-            $formattedData = number_format($revenue, 0, ',', '.') . ' đồng';
+            $formattedData = number_format($revenue, 0,',','.') . ' đồng';
             // Hiển thị số tiền đã định dạng
             echo 'Doanh thu: ' . $formattedData;
         } else {
@@ -54,7 +54,7 @@ if ($data) {
         if ($result) {
             $row = $result->fetch_assoc();
             $revenue = isset($row['revenue']) ? $row['revenue'] : 0;
-            $formattedData = number_format($revenue, 0, ',', '.') . ' đồng';
+            $formattedData = number_format($revenue, 0,',','.') . ' đồng';
             // Hiển thị số tiền đã định dạng
             echo 'Doanh thu: ' . $formattedData;
         } else {
