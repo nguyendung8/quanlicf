@@ -70,8 +70,8 @@ $conn->close();
                     <th>Mã khách hàng</th>
                     <th>Họ tên</th>
                     <th>Số lần mua hàng</th>
-                    <th>Tổng chi tiêu</th>
-                    <th>Tổng doanh thu</th>
+                    <!-- <th>Tổng chi tiêu</th>
+                    <th>Tổng doanh thu</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -80,8 +80,8 @@ $conn->close();
                         <td><?= $item['CustomerID'] ?></td>
                         <td><?= $item['FirstName'] . ' ' . $item['LastName'] ?></td>
                         <td><?= $item['NumberOfPurchases'] ?></td>
-                        <td><?= isset($item['TotalSpending']) ? $item['TotalSpending'] : 'N/A' ?></td>
-                        <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0, ',', '.') . ' đồng' : 'N/A' ?></td>
+                        <!-- <td><?= isset($item['TotalSpending']) ? $item['TotalSpending'] : 'N/A' ?></td>
+                        <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0, ',', '.') . ' đồng' : 'N/A' ?></td> -->
 
                     </tr>
                 <?php endforeach; ?>
@@ -98,7 +98,7 @@ $conn->close();
                     <th>Mã sản phẩm</th>
                     <th>Tên sản phẩm</th>
                     <th>Tổng số lượng đã bán</th>
-                    <th>Tổng doanh thu</th>
+                    <!-- <th>Tổng doanh thu</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -106,8 +106,8 @@ $conn->close();
                     <tr>
                         <td><?= $item['ProductID'] ?></td>
                         <td><?= $item['ProductName'] ?></td>
-                        <td><?= isset($item['TotalQuantitySold']) ? $item['TotalQuantitySold'] : 'N/A' ?></td>
-                        <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0, ',', '.') . ' đồng' : 'N/A' ?></td>
+                        <td><?= isset($item['TotalQuantitySold']) ? $item['TotalQuantitySold'] : '2' ?></td>
+                        <!-- <td><?= isset($item['TotalRevenue']) ? number_format($item['TotalRevenue'], 0, ',', '.') . ' đồng' : 'N/A' . ' đồng' ?></td> -->
                     </tr>
                 <?php endforeach; ?>
             </tbody>

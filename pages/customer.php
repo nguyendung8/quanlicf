@@ -255,6 +255,38 @@ if ($result->num_rows > 0) {
 $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
+    <script>
+        $(document).ready(function() {
+            var page = 1;
+
+            function loadData(page) {
+                $.ajax({
+                    url: 'customer.php?page=' + page,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        // Hiển thị dữ liệu lên trang web
+                    },
+                    error: function() {
+                    }
+                });
+            }
+
+            loadData(page);
+
+            $('#next').click(function() {
+                page++;
+                loadData(page);
+            });
+
+            $('#prev').click(function() {
+                if (page > 1) {
+                    page--;
+                    loadData(page);
+                }
+            });
+        });
+    </script>
 <style>
     .pagination {
         display: flex;

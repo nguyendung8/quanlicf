@@ -405,6 +405,39 @@ addOrder($conn);
 $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
+<script>
+        $(document).ready(function() {
+            var page = 1;
+
+            function loadData(page) {
+                $.ajax({
+                    url: 'order.php?page=' + page,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        // Hiển thị dữ liệu lên trang web
+                    },
+                    error: function() {
+                    }
+                });
+            }
+
+            loadData(page);
+
+            // Xử lý phân trang khi người dùng nhấn nút "Next" hoặc "Previous"
+            $('#next').click(function() {
+                page++;
+                loadData(page);
+            });
+
+            $('#prev').click(function() {
+                if (page > 1) {
+                    page--;
+                    loadData(page);
+                }
+            });
+        });
+    </script>
 <style>
     .pagination {
         display: flex;
