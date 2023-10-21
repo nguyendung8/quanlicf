@@ -52,20 +52,18 @@ if (!empty($result) && $result->num_rows > 0) {
 <div class="container-xxl">
     <div class="container">
         <div class="row g-0 gx-5 align-items-end">
-            <div class="col-lg-6">
-                <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                    <h1 class="display-5 mb-3">Tìm kiếm</h1>
+                <div class="section-header text-start mb-5 wow fadeInUp" data-wow-delay="0.1s" >
+                    <h1 style="text-align: center; color: #868900;">Tìm kiếm</h1>
                     <p>Bạn có thể thỏa sức tìm kiếm thứ gì mà bạn muốn!</p>
                 </div>
-            </div>
             <div id="search">
-                <form action="" method="post">
+                <form action="" method="post" style="text-align: center;">
                     <input type="text" name="txtsearch"></input>
                     <input type="submit" value="Tìm" name="search"></input>
                 </form>
             </div>
         </div>
-        <div class="table-responsive card mt-2">
+        <div class="table-responsive mt-2">
         <?php if (count($model) > 0): ?>
             <table class="table table-hover">
                 <tr>
@@ -107,7 +105,7 @@ include('../includes/layout.php');
 ?>
 <style>
 input[type="text"] {
-    min-width: 536px;
+    min-width: 300px;
     border-radius: 5px;
     padding: 7px
 }

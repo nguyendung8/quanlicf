@@ -26,7 +26,7 @@ function confirm_delete(id, type) {
     }
 
     if (confirm(confirmMessage)) {
-        window.location.href = '../../actions/confirm_delete.php?id=' + id + '&type=' + type;
+        window.location.href = '/QL_QuanCafe_PHP/actions/confirm_delete.php?id=' + id + '&type=' + type;
     }
 }
 
@@ -44,7 +44,8 @@ function closeAdd() {
 }
 
 $(document).ready(function () {
-    $('#btnAddOrder').on('click', function () {
+    $('#btnAddOrder').on('click', function (event) {
+        event.preventDefault();
         var orderDetails = [];
         const table = document.getElementById('orderDetailsTable');
         const rows = table.rows;
@@ -82,9 +83,9 @@ $(document).ready(function () {
                 EmployeeID: EmployeeID,
                 OrderDetails: orderDetails
             };
-            // Gửi yêu cầu POST bằng Ajax
+
             $.ajax({
-                url: '../../actions/add_order.php',
+                url: '../../QL_QuanCafe_PHP/actions/add_order.php',
                 type: 'POST',
                 data: JSON.stringify(order),
                 contentType: 'application/json',
@@ -99,10 +100,12 @@ $(document).ready(function () {
         }
     });
 });
+
+//
 function chiTiet(id) {
     document.getElementById('orderID').value = id;
     $.ajax({
-        url: '../../actions/detail_order.php',
+        url: '/QL_QuanCafe_PHP/actions/detail_order.php',
         type: 'POST',
         data: { idOrder: id },
         success: function (response) {
@@ -176,8 +179,14 @@ function revenue_management() {
         }
     }
     if (data != null) {
+
+        // chay cai là dc: php -S localhost:8080 
+        // search google: how to get base domain. PHP
+        // get documnet root in php, or javascript.
+        // thay vo day
+       // Thay hết mấy chỗ kia tương tụ cái này nha : QL_QuanCafe_PHP
         $.ajax({
-            url: '../../actions/get_revenue.php',
+            url: '/QL_QuanCafe_PHP/actions/get_revenue.php',
             method: 'POST',
             data: JSON.stringify(data),
             contentType: 'application/json',
@@ -193,3 +202,4 @@ function revenue_management() {
     }
 
 }
+// ok

@@ -147,7 +147,7 @@ if ($result->num_rows > 0) {
                                         </td>
                                         <?php if ($role == "Admin") : ?>
                                             <td>
-                                                <a class="btn btn-primary" href="deletecustomer.php?id=<?php echo $item['CustomerID']; ?> ">Xóa</a>
+                                                <a class="btn btn-primary" onclick="return confirmDelete('<?php echo $item['FirstName'] . ' ' . $item['LastName']  ?>')" href="deletecustomer.php?id=<?php echo $item['CustomerID']; ?> ">Xóa</a>
                                                 <a class="btn btn-success" onclick="sua(<?php echo $item['CustomerID']; ?>)">Sửa</a>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="update<?php echo $item['CustomerID']; ?>" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
@@ -215,39 +215,103 @@ if ($result->num_rows > 0) {
 
 <?php if ($role == "Admin") : ?>
     <!-- Modal -->
-    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="customerModalLabel">Thêm mới khách hàng</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Họ</label>
-                            <input class="form-control" name="FirstName" placeholder="Nhập họ" required />
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form method="post" id="form">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="customerModalLabel">Thêm mới khách hàng</h5>
                         </div>
-                        <div class="form-group">
-                            <label>Tên</label>
-                            <input class="form-control" name="LastName" placeholder="Nhập tên" required />
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Họ</label>
+                                <input class="form-control" name="FirstName" placeholder="Nhập họ" />
+                                <div style="color: red;" class="check_firstname"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Tên</label>
+                                <input class="form-control" name="LastName" placeholder="Nhập tên" />
+                                <div style="color: red;" class="check_lastname"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input class="form-control" name="Email" type="text" placeholder="Nhập email" />
+                                <div style="color: red;" class="check_email"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Số điện thoại</label>
+                                <input class="form-control" name="PhoneNumber" type="text" placeholder="Nhập số điện thoại" />
+                                <div style="color: red;" class="check_phone"></div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input class="form-control" name="Email" type="email" placeholder="Nhập email" required />
+                        <div class="modal-footer">
+                            <button type="button" onclick="closeAdd()" class="btn btn-secondary">Đóng</button>
+                            <button name="addCustomer" type="submit" class="btn btn-success">Thêm</button>
                         </div>
-                        <div class="form-group">
-                            <label>Số điện thoại</label>
-                            <input class="form-control" name="PhoneNumber" type="tel" placeholder="Nhập số điện thoại" required />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" onclick="closeAdd()" class="btn btn-secondary">Đóng</button>
-                        <button name="addCustomer" type="submit" class="btn btn-success">Thêm</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+        <script>
+            // Xử lý ngoại lệ
+            document.getElementById("form").addEventListener("submit", function(event) {
+                
+                var array = document.getElementsByTagName('input'); // tu array[15]
+                const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const numberRegex = /^\d+$/;
+                const phoneRegex = /^\d{10}$/;
+                if (array[15].value == "") {
+                    document.querySelector('.check_firstname').innerHTML = "Họ không được để trống!";
+                    event.preventDefault();
+                }  else if (specialCharRegex.test(array[15].value)) {
+                        document.querySelector('.check_firstname').innerHTML = "Họ không được phép chứa ký tự đặc biệt!";
+                        event.preventDefault();
+                } else {
+                        document.querySelector('.check_firstname').innerHTML = "";
+                }
+                if (array[16].value == "") {
+                        document.querySelector('.check_lastname').innerHTML = "Tên không được để trống!";
+                        event.preventDefault();
+                }  else if (specialCharRegex.test(array[16].value)) {
+                        document.querySelector('.check_lastname').innerHTML = "Tên không được phép chứa ký tự đặc biệt!";
+                        event.preventDefault();
+                } else {
+                    document.querySelector('.check_lastname').innerHTML = "";
+                }
+                if (array[17].value == "") {
+                    document.querySelector('.check_email').innerHTML = "Email không được để trống!";
+                    event.preventDefault();
+                } else if(!emailRegex.test(array[17].value)) {
+                        document.querySelector('.check_email').innerHTML = "Email sai định dạng!";
+                        event.preventDefault();
+                } else {
+                    document.querySelector('.check_email').innerHTML = "";
+                }
+                if (array[18].value == "") {
+                    document.querySelector('.check_phone').innerHTML = "Số điện thoại không được để trống!";
+                    event.preventDefault();
+                } else if(!numberRegex.test(array[18].value)) {
+                    document.querySelector('.check_phone').innerHTML = "Vui lòng chỉ nhập số!";
+                    event.preventDefault();
+                } else if(!phoneRegex.test(array[18].value)) {
+                  document.querySelector('.check_phone').innerHTML = "Số điện thoại có 10 chữ số!";
+                  event.preventDefault();
+                } else {
+                    document.querySelector('.check_phone').innerHTML = "";
+                }
+            });
+        </script>
+    </body>
+    </html>
 <?php endif; ?>
 
 
@@ -255,7 +319,10 @@ if ($result->num_rows > 0) {
 $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
-    <script>
+<script>
+    function confirmDelete(name) {
+       return confirm("Bạn có chắc chắn muốn xóa khách hàng " + name + " không?");
+    }
         $(document).ready(function() {
             var page = 1;
 

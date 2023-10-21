@@ -158,7 +158,7 @@ if ($result->num_rows > 0) {
                                         </td>
                                         <?php if ($role == "Admin"): ?>
                                             <td>
-                                                <a class="btn btn-primary" href="deleteproduct.php?id=<?php echo $item['ProductID']; ?> ">Xóa</a>
+                                                <a class="btn btn-primary" onclick="return confirmDelete('<?php echo $item['ProductName']?>')" href="deleteproduct.php?id=<?php echo $item['ProductID']; ?> ">Xóa</a>
                                                 <a class="btn btn-success" onclick="sua(<?php echo $item['ProductID']; ?>)">Sửa</a>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="update<?php echo $item['ProductID']; ?>" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
@@ -261,6 +261,9 @@ $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
 <script>
+    function confirmDelete(name) {
+       return confirm("Bạn có chắc chắn muốn xóa sản phẩm " + name + " không?");
+    }
         $(document).ready(function() {
             var page = 1;
 

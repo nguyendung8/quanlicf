@@ -92,25 +92,6 @@ function updateTotalPrice($selectedProductID, $selectedQuantity, $products)
     return 0;
 }
 
-//create order 
-function addOrder($conn) {
-    if (isset($_POST['addOrder'])) {
-        $customer_id = $_POST['customerId'];
-        $employee_id = $_POST['employeeId'];
-
-        $sql = "INSERT INTO `orders` (`CustomerID`, `EMployeeID`, `UnitPrice`) 
-        VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $customer_id, $employee_id);
-
-        if ($stmt->execute()) {
-            setFlashMessage("Thêm mới đơn hàng thành công", true);
-        } else {
-            setFlashMessage("Thêm mới đơn hàng không thành công", false);
-        }
-        $stmt->close();
-    }
-}
 
 //update order
 function updateOrder($conn)
@@ -134,7 +115,6 @@ function updateOrder($conn)
     }
 }
 updateOrder($conn);
-addOrder($conn);
 
 // Đóng kết nối cơ sở dữ liệu
 // $conn->close();
@@ -261,7 +241,7 @@ addOrder($conn);
                                             <label style="width: auto"><?php echo $order['OrderDate']; ?></label>
                                         </td>
                                         <td>
-                                            <a class="btn btn-primary" href="deleteorder.php?id=<?php echo $order['OrderID']; ?> ">Xóa</a>
+                                            <a class="btn btn-primary" onclick="return confirmDelete()" href="deleteorder.php?id=<?php echo $order['OrderID']; ?> ">Xóa</a>
                                             <a class="btn btn-success" onclick="sua(<?php echo $order['OrderID']; ?>)">Sửa</a>
                                             <a class="btn btn-warning" onclick="chiTiet(<?php echo $order['OrderID']; ?>)">Chi tiết</a>
 
@@ -372,7 +352,7 @@ addOrder($conn);
             </div>
             <div class="modal-footer">
                 <button type="button" onclick="closeAdd()" class="btn btn-secondary">Đóng</button>
-                <button name="addOrder" type="submit" class="btn btn-success" id="btnAddOrder">Thêm</button>
+                <button name="addOrder" type="button" class="btn btn-success" id="btnAddOrder">Thêm</button>
             </div>
         </form>
         </div>
@@ -406,6 +386,9 @@ $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
 <script>
+    function confirmDelete() {
+       return confirm("Bạn có chắc chắn muốn xóa đơn hàng này không?");
+    }
         $(document).ready(function() {
             var page = 1;
 

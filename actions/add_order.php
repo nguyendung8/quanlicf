@@ -12,12 +12,10 @@ function setFlashMessage($message, $success)
 }
 if ($data) {
     if (isset($data['CustomerID']) && isset($data['EmployeeID'])) {
-        $orderDate = date("Y-m-d H:i:s");
-
         $sql = "INSERT INTO `orders` (`CustomerID`, `EmployeeID`, `OrderDate`) 
-        VALUES (?, ?, ?)";
+        VALUES (?, ?, NOW())";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sss", $data['CustomerID'], $data['EmployeeID'], $orderDate);
+        $stmt->bind_param("ii", $data['CustomerID'], $data['EmployeeID']);
 
         if ($stmt->execute()) {
             $orderID = mysqli_insert_id($conn);

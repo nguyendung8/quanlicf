@@ -168,7 +168,7 @@ if ($resultR->num_rows > 0) {
                                         </td>
                                         <?php if ($role == "Admin") : ?>
                                             <td>
-                                                <a class="btn btn-primary deleteButton" href="deleteemployee.php?id=<?php echo $item['EmployeeID']?> ">Xóa</a>
+                                                <a class="btn btn-primary deleteButton" onclick="return confirmDelete('<?php echo $item['FirstName'] . $item['LastName']  ?>')" href="deleteemployee.php?id=<?php echo $item['EmployeeID']?> ">Xóa</a>
                                                 <a class="btn btn-success" onclick="sua(<?php echo $item['EmployeeID']; ?>)">Sửa</a>
 
                                                 <!-- Modal -->
@@ -250,55 +250,149 @@ if ($resultR->num_rows > 0) {
 
 <?php if ($role == "Admin") : ?>
     <!-- Modal -->
-    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="employeeModalLabel">Thêm mới nhân viên</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Họ</label>
-                            <input class="form-control" name="FirstName" placeholder="Nhập họ" required />
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form method="post" id="form">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="employeeModalLabel">Thêm mới nhân viên</h5>
                         </div>
-                        <div class="form-group">
-                            <label>Tên</label>
-                            <input class="form-control" name="LastName" placeholder="Nhập tên" required />
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Họ</label>
+                                <input type="text" class="form-control firstname" name="FirstName" placeholder="Nhập họ" />
+                                <div style="color: red;" class="check_firstname"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Tên</label>
+                                <input type="text" class="form-control" name="LastName" placeholder="Nhập tên" />
+                                <div style="color: red;" class="check_lastname"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input class="form-control" name="Email" type="text" placeholder="Nhập email" />
+                                <div style="color: red;" class="check_email"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Số điện thoại</label>
+                                <input class="form-control" name="PhoneNumber" type="text" placeholder="Nhập số điện thoại" />
+                                <div style="color: red;" class="check_phone"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Tên đăng nhập</label>
+                                <input class="form-control" name="UserName" type="text" placeholder="Nhập tên đăng nhập" />
+                                <div style="color: red;" class="check_username"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu</label>
+                                <input class="form-control" name="Password" type="password" placeholder="Nhập mật khẩu" />
+                                <div style="color: red;" class="check_password"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Chức vụ</label>
+                                <select class="form-control" name="RoleID">
+                                    <?php foreach ($roles as $item1) : ?>
+                                        <option value="<?php echo $item1['RoleID']; ?>"><?php echo $item1['RoleName']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div style="color: red;" class="check_role"></div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input class="form-control" name="Email" type="email" placeholder="Nhập email" required />
+                        <div class="modal-footer">
+                            <button type="button" onclick="closeAdd()" class="btn btn-secondary">Đóng</button>
+                            <button name="addEmployee" type="submit" class="btn btn-success">Thêm</button>
                         </div>
-                        <div class="form-group">
-                            <label>Số điện thoại</label>
-                            <input class="form-control" name="PhoneNumber" type="tel" placeholder="Nhập số điện thoại" required />
-                        </div>
-                        <div class="form-group">
-                            <label>Tên đăng nhập</label>
-                            <input class="form-control" name="UserName" type="text" placeholder="Nhập tên đăng nhập" required />
-                        </div>
-                        <div class="form-group">
-                            <label>Mật khẩu</label>
-                            <input class="form-control" name="Password" minlength="8" type="password" placeholder="Nhập mật khẩu" required />
-                        </div>
-                        <div class="form-group">
-                            <label>Chức vụ</label>
-                            <select class="form-control" name="RoleID">
-                                <?php foreach ($roles as $item1) : ?>
-                                    <option value="<?php echo $item1['RoleID']; ?>"><?php echo $item1['RoleName']; ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" onclick="closeAdd()" class="btn btn-secondary">Đóng</button>
-                        <button name="addEmployee" type="submit" class="btn btn-success">Thêm</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+        <script>
+            // Xử lý ngoại lệ
+            document.getElementById("form").addEventListener("submit", function(event) {
+                // event.preventDefault();
+                
+                var array = document.getElementsByTagName('input'); // tu array[6]
+                var select = document.getElementsByTagName('select');
+
+                const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const numberRegex = /^\d+$/;
+                const phoneRegex = /^\d{10}$/;
+                if (array[6].value == "") {
+                    document.querySelector('.check_firstname').innerHTML = "Họ không được để trống!";
+                    event.preventDefault();
+                }  else if (specialCharRegex.test(array[6].value)) {
+                        document.querySelector('.check_firstname').innerHTML = "Họ không được phép chứa ký tự đặc biệt!";
+                        event.preventDefault();
+                } else {
+                        document.querySelector('.check_firstname').innerHTML = "";
+                }
+                if (array[7].value == "") {
+                        document.querySelector('.check_lastname').innerHTML = "Tên không được để trống!";
+                        event.preventDefault();
+                }  else if (specialCharRegex.test(array[7].value)) {
+                        document.querySelector('.check_lastname').innerHTML = "Tên không được phép chứa ký tự đặc biệt!";
+                        event.preventDefault();
+                } else {
+                    document.querySelector('.check_lastname').innerHTML = "";
+                }
+                if (array[8].value == "") {
+                    document.querySelector('.check_email').innerHTML = "Email không được để trống!";
+                    event.preventDefault();
+                } else if(!emailRegex.test(array[8].value)) {
+                        document.querySelector('.check_email').innerHTML = "Email sai định dạng!";
+                        event.preventDefault();
+                } else {
+                    document.querySelector('.check_email').innerHTML = "";
+                }
+                if (array[9].value == "") {
+                    document.querySelector('.check_phone').innerHTML = "Số điện thoại không được để trống!";
+                    event.preventDefault();
+                } else if(!numberRegex.test(array[9].value)) {
+                    document.querySelector('.check_phone').innerHTML = "Vui lòng chỉ nhập số!";
+                    event.preventDefault();
+                } else if(!phoneRegex.test(array[9].value)) {
+                  document.querySelector('.check_phone').innerHTML = "Số điện thoại có 10 chữ số!";
+                  event.preventDefault();
+                } else {
+                    document.querySelector('.check_phone').innerHTML = "";
+                }
+                if (array[10].value == "") {
+                    document.querySelector('.check_username').innerHTML = "Tên đăng nhập không được để trống!";
+                    event.preventDefault();
+                } else if (specialCharRegex.test(array[10].value)) {
+                        document.querySelector('.check_username').innerHTML = "Tên đăng nhập không được phép chứa ký tự đặc biệt!";
+                        event.preventDefault();
+                }  else {
+                    document.querySelector('.check_username').innerHTML = "";
+                }
+                if (array[11].value == "") {
+                    document.querySelector('.check_password').innerHTML = "Mật khẩu không được để trống!";
+                    event.preventDefault();
+                } else if (array[11].value.length < 8) {
+                        document.querySelector('.check_password').innerHTML = "Mật khẩu tối thiểu 8 kí tự!";
+                        event.preventDefault();
+                }  else {
+                    document.querySelector('.check_password').innerHTML = "";
+                }
+                if (select.value == "") {
+                    document.querySelector('.check_role').innerHTML = "Chức vụ không được để trống!";
+                    event.preventDefault();
+                } else {
+                    document.querySelector('.check_role').innerHTML = "";
+                }
+            });
+        </script>
+    </body>
+    </html>
 <?php endif; ?>
 
 <?php
@@ -306,38 +400,41 @@ $content = ob_get_clean();
 include('../includes/layout.php');
 ?>
 <script>
-        $(document).ready(function() {
-            var page = 1;
+    function confirmDelete(name) {
+       return confirm("Bạn có chắc chắn muốn xóa nhân viên " + name + " không?");
+    }
+    $(document).ready(function() {
+        var page = 1;
 
-            function loadData(page) {
-                $.ajax({
-                    url: 'employee.php?page=' + page,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        // Hiển thị dữ liệu lên trang web
-                    },
-                    error: function() {
-                    }
-                });
-            }
-
-            loadData(page);
-
-            // Xử lý phân trang khi người dùng nhấn nút "Next" hoặc "Previous"
-            $('#next').click(function() {
-                page++;
-                loadData(page);
-            });
-
-            $('#prev').click(function() {
-                if (page > 1) {
-                    page--;
-                    loadData(page);
+        function loadData(page) {
+            $.ajax({
+                url: 'employee.php?page=' + page,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // Hiển thị dữ liệu lên trang web
+                },
+                error: function() {
                 }
             });
+        }
+
+        loadData(page);
+
+        // Xử lý phân trang khi người dùng nhấn nút "Next" hoặc "Previous"
+        $('#next').click(function() {
+            page++;
+            loadData(page);
         });
-    </script>
+
+        $('#prev').click(function() {
+            if (page > 1) {
+                page--;
+                loadData(page);
+            }
+        });
+    });
+</script>
 <style>
     .pagination {
         display: flex;

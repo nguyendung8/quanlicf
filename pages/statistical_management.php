@@ -63,7 +63,7 @@ $conn->close();
 
 <?php if ($role == "Admin") : ?>
     <div class="container">
-        <h2>Thống kê doanh thu, số lần mua và chi tiêu của khách hàng</h2>
+        <h2>Thống kê doanh thu, số lần mua của khách hàng</h2>
         <table class="table">
             <thead>
                 <tr>

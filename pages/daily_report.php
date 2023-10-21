@@ -70,7 +70,7 @@ if (isset($_POST['addDailyReport'])) {
     $sqlOrderDetails = "SELECT SUM(TotalPrice) AS TotalRevenue FROM orderdetails WHERE OrderID IN (SELECT OrderID FROM orders WHERE EmployeeID = $employeeId AND DATE(OrderDate) = '$reportDate')";
     $resultOrderDetails = $conn->query($sqlOrderDetails);
     $rowOrderDetails = $resultOrderDetails->fetch_assoc();
-    $totalRevenue = $rowOrderDetails['TotalRevenue'];
+    $totalRevenue = $rowOrderDetails['TotalRevenue']; /// null here
 
     // Truy vấn dữ liệu số lượng khách hàng
     $sqlCustomers = "SELECT COUNT(DISTINCT CustomerID) AS TotalCustomers FROM orders WHERE EmployeeID = $employeeId AND DATE(OrderDate) = '$reportDate'";
